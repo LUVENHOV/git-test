@@ -1,2 +1,6 @@
 클론 저장소에서 추가한 파일
+<<<<<<< HEAD
 git-test-cloned 저장소
+=======
+git-test 저장소
+>>>>>>> c9601e4832d31d041f2ee74a2589b72cacfd64e8
