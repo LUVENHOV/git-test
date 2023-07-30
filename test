@@ -308,4 +308,68 @@ public interface IProductManager {
 	Refrigerator[] getRefrigeratorsFreezer(boolean freezer);
 
 }
+package com.ssafy.hw.step4;
+
+public class ProductTest {
+
+	
+	public static void main(String[] args) {
+		
+		Refrigerator ref1 = new Refrigerator("R00001", "S냉장고", 1500000, 50,  "삼성", "삼성에서 출시한 스마트냉장고입니다.", "냉장고", 1500, true, 2023);
+		Refrigerator ref2 = new Refrigerator("R00002", "A냉장고", 1100000, 10,  "알파", "알파에서 출시한 스마트냉장고입니다.", "냉장고", 1100, false, 2022);
+		Refrigerator ref3 = new Refrigerator("R00003", "B냉장고", 1200000, 20,  "베타", "베타에서 출시한 스마트냉장고입니다.", "냉장고", 1200, true, 2022);
+		Refrigerator ref4 = new Refrigerator("R00004", "C냉장고", 1300000, 30,  "감마", "감마에서 출시한 스마트냉장고입니다.", "냉장고", 1300, false, 2021);
+		Refrigerator ref5 = new Refrigerator("R00005", "D냉장고", 1400000, 40,  "오메가", "오메가에서 출시한 스마트냉장고입니다.", "냉장고", 1400, true, 2021);
+		Product prd2 = new Product("P00001","우주폰S", 500000, 100, "삼성", "삼성에서 출시한 우주폰S입니다.");
+		Product prd3 = new Product("P00002","사과폰", 1500000, 100, "애플", "애플에서 출시한 사과폰입니다.");
+		
+		Review rev1 = new Review(1,"R00001", "park", "가전제품은 LG");
+		Review rev2 = new Review(2,"P00001", "yang", "성능이 아주 좋습니당~!");
+		Review rev3 = new Review(3,"P00002", "kim", "갬성 낭낭해요~");
+		Review rev4 = new Review(4,"P00002", "lee", "나는야앱등이");
+		
+		ProductManagerImpl pm = ProductManagerImpl.getInstance();
+		
+		pm.addProduct(ref1);
+		pm.addProduct(ref2);
+		pm.addProduct(ref3);
+		pm.addProduct(ref4);
+		pm.addProduct(ref5);
+		pm.addProduct(prd2);
+		pm.addProduct(prd3);
+		pm.addReview(rev1);
+		pm.addReview(rev2);
+		pm.addReview(rev3);
+		pm.addReview(rev4);
+				
+		System.out.println("-------------제품 목록-------------");
+		Product[] resList = pm.getProductList();
+		for(Product m : resList)
+			System.out.println(m);
+		
+		System.out.println("-------------일반 상품 목록-------------");
+		Product[] normList = pm.getProducts();
+		for(Product m : normList)
+			System.out.println(m);
+		
+		System.out.println("-------------냉장고 목록-------------");
+		Refrigerator[] refrigerList = pm.getRefrigerators();
+		for(Refrigerator m : refrigerList)
+			System.out.println(m);
+		
+		System.out.println("-------------냉동고 있는 목록-------------");
+		Refrigerator[] freezerList = pm.getRefrigeratorsFreezer(true);
+		for(Refrigerator m : freezerList)
+			System.out.println(m);
+		System.out.println("-------------이름 검색 : S-------------");
+		Product[] searchList1 = pm.searchByName("S");
+		for(Product m : searchList1)
+			System.out.println(m);
+		
+		System.out.println("-------------제품 총 가격-------------");
+		System.out.println(pm.getTotalPrice());
+
+	}
+}
+
 
