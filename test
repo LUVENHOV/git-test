@@ -1,0 +1,311 @@
+package com.ssafy.hw.step4;
+
+public class Refrigerator extends Product {
+	// 코드를 작성하세요.
+
+	private String category;
+	private int liter;
+	private boolean freezer;
+	private int year;
+
+	public Refrigerator() {
+		super();
+	}
+
+	public Refrigerator(String pCode, String pName, int price, int quantity, String brand, String desc, String category,
+			int liter, boolean freezer, int year) {
+		super(pCode, pName, price, quantity, brand, desc);
+		this.category = category;
+		this.liter = liter;
+		this.freezer = freezer;
+		this.year = year;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public int getLiter() {
+		return liter;
+	}
+
+	public void setLiter(int liter) {
+		this.liter = liter;
+	}
+
+	public boolean isFreezer() {
+		return freezer;
+	}
+
+	public void setFreezer(boolean freezer) {
+		this.freezer = freezer;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "Refrigerator [category=" + category + ", liter=" + liter + ", freezer=" + freezer + ", year=" + year
+				+ "]";
+	}
+	
+
+
+}
+
+
+package com.ssafy.hw.step4;
+
+public class ProductManagerImpl implements IProductManager{
+	private int size1 = 0; //product
+	private int size2 = 0; //review
+
+	private final int MAX_PRODUCT_SIZE = 100;
+	private final int MAX_REVIEW_SIZE = 1000;
+
+	private Product[] productList = new Product[MAX_PRODUCT_SIZE];
+	private Review[] reviewList = new Review[MAX_REVIEW_SIZE];
+	
+	public static ProductManagerImpl pm = new ProductManagerImpl();
+	
+	public static ProductManagerImpl getInstance() {
+		return pm;
+	}
+
+	public boolean addProduct(Product product) {
+
+		if (size1 < MAX_PRODUCT_SIZE) {
+			productList[size1++] = product;
+			return true;
+		} else {
+			System.out.println("제품의 수가 100을 넘었습니다. 등록불가.");
+			return false;
+		}
+	}
+	
+	public boolean updateProduct(Product product) {
+		for (int i = 0; i < size1; i++) {
+			if (productList[i].getpCode() == product.getpCode()) {
+				productList[i].setpName(product.getpName());
+				productList[i].setPrice(product.getPrice());
+				productList[i].setQuantity(product.getQuantity());
+				productList[i].setBrand(product.getBrand());
+				productList[i].setDesc(product.getDesc());
+				return true;
+			}
+		}
+		return false;
+
+	}
+	
+	public boolean removeProduct(String pCode) {
+
+		for (int i = 0; i < size1; i++) {
+			if (productList[i].getpCode() == pCode) {
+				int remove_idx = i;
+				for (int j = remove_idx; j < size1 - 1; j++) {
+					productList[j] = productList[j + 1];
+				}
+				productList[size1] = null;
+				size1--;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public int sell(String pCode, int cnt) {
+		for (int i = 0; i < size1; i++) {
+			if (productList[i].getpCode() == pCode) {
+				productList[i].setQuantity(productList[i].getQuantity() - cnt);
+				return productList[i].getQuantity();
+			}			
+		}
+		return -1;
+	}
+
+	public Product[] getProductList() {
+		Product[] result = new Product[size1];
+
+		for (int i = 0; i < size1; i++) {
+			result[i] = productList[i];
+		}
+		return result;
+	}
+	
+	public Product searchByCode(String pCode) {
+		
+		for (int i = 0; i <this.size1 ; i++) {
+			if (productList[i].getpCode().equals(pCode)) {
+				return productList[i];
+			}
+		}
+		return null;
+	}
+
+	public boolean addReview(Review review) {
+
+		if (size2 < MAX_REVIEW_SIZE) {
+			reviewList[size2++] = review;
+			return true;
+		} else {
+			System.out.println("리뷰의 수가 1000을 넘었습니다. 등록 불가.");
+			return false;
+		}
+	}
+
+	public boolean removeReview(int reviewid) {
+
+		for (int i = 0; i < size2; i++) {
+			if (reviewList[i].getReviewid() == reviewid) {
+				int remove_idx = i;
+				for (int j = remove_idx; j < size2 - 1; j++) {
+					reviewList[j] = reviewList[j + 1];
+				}
+				reviewList[size2] = null;
+				size2--;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Review[] getProductReview(String pCode) {
+		int cnt = 0;
+		for (int i = 0; i < this.size2; i++) {
+			if (reviewList[i].getpCode().equals(pCode))
+				cnt++;
+		}
+
+		Review[] result = new Review[cnt];
+		int idx = 0;
+		for (int i = 0; i < this.size2; i++) {
+			if (reviewList[i].getpCode().equals(pCode)) 
+				result[idx++] = reviewList[i];
+
+		}
+		return result;
+	}
+	
+	public Product[] searchByName(String pName) {
+		int cnt = 0;
+		for (int i = 0; i < this.size1; i++) {
+			if (productList[i].getpName().contains(pName))
+				cnt++;
+		}
+
+		Product[] result = new Product[cnt];
+		int idx = 0;
+		for (int i = 0; i < this.size1; i++) {
+			if (productList[i].getpName().contains(pName)) 
+				result[idx++] = productList[i];
+
+		}
+		return result;
+	}
+	
+	public long getTotalPrice() {
+		int total = 0;
+
+		for (int i = 0; i < this.size1; i++) {
+			total += (productList[i].getPrice()) * (productList[i].getQuantity());
+		}
+
+		return total;
+	}
+	
+	public Product[] getProducts() {
+
+		int cnt = 0;
+
+		for (int i = 0; i < this.size1; i++) {
+			if (!(productList[i] instanceof Refrigerator)) {
+				cnt++;
+			}
+		}
+
+		if (cnt == 0)
+			return null;
+
+		Product[] res = new Product[cnt];
+
+		for (int i = 0, index = 0; i < this.size1; i++) {
+			if (!(productList[i] instanceof Refrigerator)) {
+				res[index++] = productList[i];
+			}
+		}
+
+		return res;
+
+	}
+	
+	Refrigerator[] refList;
+	int refcnt = 0;
+
+	public Refrigerator[] getRefrigerators() {
+
+		for (int i = 0; i < this.size1; i++) {
+			if (productList[i] instanceof Refrigerator) {
+				refcnt++;
+			}
+		}
+
+		if (refcnt == 0)
+			return null;
+
+		refList = new Refrigerator[refcnt];
+
+		for (int i = 0, index = 0; i < this.size1; i++) {
+			if (productList[i] instanceof Refrigerator) {
+				refList[index++] = (Refrigerator) productList[i];
+			}
+		}
+		return refList;
+	}
+	
+	public Refrigerator[] getRefrigeratorsFreezer(boolean freezer){
+		
+		int cnt = 0;
+		
+		for (int i = 0;i <refcnt ; i++) if(refList[i].isFreezer() == freezer)
+			cnt++;
+		
+		Refrigerator[] res = new Refrigerator[cnt];
+		
+		for (int i = 0, index = 0;i < refcnt; i++) if(refList[i].isFreezer() == freezer)
+			res[index++] = refList[i];
+		return res;
+	}
+
+}
+
+package com.ssafy.hw.step4;
+
+public interface IProductManager {
+	boolean addProduct(Product product);
+	boolean updateProduct(Product Product);
+	boolean removeProduct(String pCode);
+	int sell(String pCode, int cnt);
+	Product[] getProductList();
+	Product searchByCode(String pCode);
+	boolean addReview(Review review);
+	boolean removeReview(int reviewid);
+	Review[] getProductReview(String pCode);
+	Product[] searchByName(String pName);
+	long getTotalPrice();
+	Product[] getProducts();
+	Refrigerator[] getRefrigerators();
+	Refrigerator[] getRefrigeratorsFreezer(boolean freezer);
+
+}
+
